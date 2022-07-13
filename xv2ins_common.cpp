@@ -69,9 +69,26 @@ static bool IsOldStyleSev()
     return ret;
 }
 
+static bool IsOldStyleIdb()
+{
+    size_t size = xv2fs->GetFileSize("data/system/item/skill_item.idb");
+    if (size == (size_t)-1)
+        return false;
+
+    if (size >= sizeof(IDBHeader))
+    {
+        size -= 0x10;
+
+        if ((size % sizeof(IDBEntryNew)) == 0)
+            return false;
+    }
+
+    return true;
+}
+
 static bool NeedsUpdate()
 {
-    return IsOldStylePsc() || IsOldStyleSev();
+    return IsOldStylePsc() || IsOldStyleSev() || IsOldStyleIdb();
 }
 
 static uint8_t *ReadResourceFile(const char *path, size_t *size)
@@ -102,87 +119,6 @@ static uint8_t *ReadResourceFile(const char *path, size_t *size)
      return buf;
 }
 
-#define DIALOGUE_PATH "data/sound/VOX/Quest/Dialogue/"
-
-bool InstallCraftedAcb()
-{
-    // 3.7: delete this. AcbFile.cpp should now be able to write to the lastest .acb.
-
-    /*if (!xv2fs->FileExists(std::string(DIALOGUE_PATH) + "CAQD_ADD_VOX.acb", false) || !xv2fs->FileExists(std::string(DIALOGUE_PATH) + "CAQD_ADD_VOX.awb", false))
-    {
-        size_t size;
-        uint8_t *buf = ReadResourceFile(":/crafted_acb/CAQD_ADD_VOX.acb", &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to read internal resource, shouldn't happen.\n", FUNCNAME);
-            return false;
-        }
-
-        bool ret = xv2fs->WriteFile(std::string(DIALOGUE_PATH) + "CAQD_ADD_VOX.acb", buf, size);
-        delete[] buf;
-        if (!ret)
-        {
-            DPRINTF("%s: Failed to write acb file (jp)\n", FUNCNAME);
-            return false;
-        }
-
-        buf = ReadResourceFile(":/crafted_acb/CAQD_ADD_VOX.awb", &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to read internal resource, shouldn't happen.\n", FUNCNAME);
-            return false;
-        }
-
-        ret = xv2fs->WriteFile(std::string(DIALOGUE_PATH) + "CAQD_ADD_VOX.awb", buf, size);
-        delete[] buf;
-        if (!ret)
-        {
-            DPRINTF("%s: Failed to write awb file (jp)\n", FUNCNAME);
-            return false;
-        }
-    }
-
-    if (!xv2fs->FileExists(std::string(DIALOGUE_PATH) + "en/CAQD_ADD_VOX.acb", false) || !xv2fs->FileExists(std::string(DIALOGUE_PATH) + "en/CAQD_ADD_VOX.awb", false))
-    {
-        size_t size;
-        uint8_t *buf = ReadResourceFile(":/crafted_acb/en/CAQD_ADD_VOX.acb", &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to read internal resource, shouldn't happen.\n", FUNCNAME);
-            return false;
-        }
-
-        bool ret = xv2fs->WriteFile(std::string(DIALOGUE_PATH) + "en/CAQD_ADD_VOX.acb", buf, size);
-        delete[] buf;
-        if (!ret)
-        {
-            DPRINTF("%s: Failed to write acb file (en)\n", FUNCNAME);
-            return false;
-        }
-
-        buf = ReadResourceFile(":/crafted_acb/en/CAQD_ADD_VOX.awb", &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to read internal resource, shouldn't happen.\n", FUNCNAME);
-            return false;
-        }
-
-        ret = xv2fs->WriteFile(std::string(DIALOGUE_PATH) + "en/CAQD_ADD_VOX.awb", buf, size);
-        delete[] buf;
-        if (!ret)
-        {
-            DPRINTF("%s: Failed to write awb file (en)\n", FUNCNAME);
-            return false;
-        }
-    }*/
-
-    return true;
-}
-
 bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
 {
     if (needs_update)
@@ -199,7 +135,7 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
     Xenoverse2::InitFs(Utils::QStringToStdString(config.game_directory));    
 
     float version = Utils::GetExeVersion(Utils::MakePathString(Utils::QStringToStdString(config.game_directory), "bin/DBXV2.exe"));
-    if (version < MINIMUM_EXE_VERSION_REQUIRED)
+    if (version < (MINIMUM_EXE_VERSION_REQUIRED-0.0001))
     {
         DPRINTF("Version %.3f or greater of the game is required. You have version %.3f.\n", MINIMUM_EXE_VERSION_REQUIRED, version);
         return false;
@@ -212,9 +148,6 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
         if (*needs_update)
             return false;
     }
-
-    if (installer_mode && !InstallCraftedAcb())
-        return false;
 
     bool install_iggy = true;
 

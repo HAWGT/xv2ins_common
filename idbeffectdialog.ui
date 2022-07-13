@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>751</width>
-    <height>650</height>
+    <height>680</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>5</x>
-     <y>605</y>
+     <y>635</y>
      <width>745</width>
      <height>23</height>
     </rect>
@@ -1315,6 +1315,52 @@
      <width>100</width>
      <height>20</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nu48Edit">
+   <property name="geometry">
+    <rect>
+     <x>370</x>
+     <y>558</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_57">
+   <property name="geometry">
+    <rect>
+     <x>323</x>
+     <y>560</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>NU_48:</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="nu4CEdit">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>588</y>
+     <width>100</width>
+     <height>20</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_58">
+   <property name="geometry">
+    <rect>
+     <x>82</x>
+     <y>590</y>
+     <width>47</width>
+     <height>13</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>NU_4C:</string>
    </property>
   </widget>
  </widget>
