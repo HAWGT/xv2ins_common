@@ -124,7 +124,7 @@ void Config::Load()
     ini.GetBooleanValue("Editor", "listen_css_language_english", &listen_css_language_english);
     ini.GetBooleanValue("Editor", "listen_sev_language_english", &listen_sev_language_english);
 
-    ini.GetBooleanValue("Installer", "prb_fix_applied", &prb_fix_applied, false);
+    ini.GetBooleanValue("Installer", "idb_fix_applied", &idb_fix_applied, false);
 
     ini.GetStringValue("Editor", "ld_quest_export", ld_quest_export_std);
     ini.GetStringValue("Editor", "ld_quest_import", ld_quest_import_std);
@@ -339,7 +339,7 @@ void Config::Save()
     ini.SetBooleanValue("Editor", "listen_css_language_english", listen_css_language_english);
     ini.SetBooleanValue("Editor", "listen_sev_language_english", listen_sev_language_english);
 
-    ini.SetBooleanValue("Installer", "prb_fix_applied", &prb_fix_applied);
+    ini.SetBooleanValue("Installer", "idb_fix_applied", idb_fix_applied);
 
     ini.SetStringValue("Editor", "ld_quest_export", ld_quest_export_std);
     ini.SetStringValue("Editor", "ld_quest_import", ld_quest_import_std);

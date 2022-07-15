@@ -64,7 +64,7 @@ struct Config
     bool listen_css_language_english;
     bool listen_sev_language_english;
 
-    bool prb_fix_applied;
+    bool idb_fix_applied;
 
     void Load();
     void Save();
