@@ -295,6 +295,11 @@
      <string>Dlc_14</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>Dlc_15</string>
+    </property>
+   </item>
   </widget>
  </widget>
  <resources/>

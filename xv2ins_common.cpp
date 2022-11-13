@@ -303,6 +303,12 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
         return false;
     }
 
+    if (needs_update && !game_cus->IsNewFormat())
+    {
+        *needs_update = true;
+        return false;
+    }
+
     if (!Xenoverse2::InitCharaNames())
     {
         DPRINTF("InitCharaNames failed.\n");
