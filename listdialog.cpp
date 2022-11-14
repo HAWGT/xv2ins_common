@@ -356,7 +356,7 @@ void ListDialog::PopulateList()
 
         for (const SevEntry &entry : *sev)
         {
-            if (!include_mods && entry.char_id >= XV2_FREE_ID_SEARCH_START)
+            if (!include_mods && Xenoverse2::IsModCms(entry.char_id))
                 continue;
 
             CmsEntry *cms_entry = game_cms->FindEntryByID(entry.char_id);
@@ -1124,7 +1124,7 @@ void ListDialog::PopulateList()
         {
             CharCostumeDef cd;
 
-            if (!include_mods && entry.cms_id >= XV2_FREE_ID_SEARCH_START)
+            if (!include_mods && Xenoverse2::IsModCms(entry.cms_id))
                 continue;
 
             CmsEntryXV2 *cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(entry.cms_id));
@@ -1142,7 +1142,7 @@ void ListDialog::PopulateList()
 
             for (const TtbEvent &event : entry.events)
             {
-                if (include_mods || event.cms2_id < XV2_FREE_ID_SEARCH_START)
+                if (include_mods || !Xenoverse2::IsModCms(event.cms2_id))
                 {
                     cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(event.cms2_id));
 
@@ -1154,7 +1154,7 @@ void ListDialog::PopulateList()
                     }
                 }
 
-                if (include_mods || event.cms3_id < XV2_FREE_ID_SEARCH_START)
+                if (include_mods || !Xenoverse2::IsModCms(event.cms3_id))
                 {
                     cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(event.cms3_id));
 
@@ -1166,7 +1166,7 @@ void ListDialog::PopulateList()
                     }
                 }
 
-                if (include_mods || event.cms4_id < XV2_FREE_ID_SEARCH_START)
+                if (include_mods || !Xenoverse2::IsModCms(event.cms4_id))
                 {
                     cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(event.cms4_id));
 
@@ -1178,7 +1178,7 @@ void ListDialog::PopulateList()
                     }
                 }
 
-                if (include_mods || event.cms5_id < XV2_FREE_ID_SEARCH_START)
+                if (include_mods || !Xenoverse2::IsModCms(event.cms5_id))
                 {
                     cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(event.cms5_id));
 
@@ -1256,7 +1256,7 @@ void ListDialog::PopulateList()
         {
             CharCostumeDef cd;
 
-            if (!include_mods && entry.cms_id >= XV2_FREE_ID_SEARCH_START)
+            if (!include_mods && Xenoverse2::IsModCms(entry.cms_id))
                 continue;
 
             CmsEntryXV2 *cms = dynamic_cast<CmsEntryXV2 *>(game_cms->FindEntryByID(entry.cms_id));

@@ -7,7 +7,7 @@
 #define PROGRAM_NAME_COSTCREAT  "XV2 Costume Creator"
 #define PROGRAM_NAME_STAGECREAT "XV2 Stage Creator"
 #define PROGRAM_NAME_QUESTCREAT "XV2 Quest Creator"
-#define PROGRAM_VERSION "3.9"
+#define PROGRAM_VERSION "3.91"
 
 #define INSTALLED_MODS_PATH "XV2INS/Installed"
 
