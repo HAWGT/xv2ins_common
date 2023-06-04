@@ -145,6 +145,10 @@ void StageSeleDialog::LoadPage(int page)
                     pixmap = pixmap.scaled(ICON_WIDTH, ICON_HEIGHT);
                 }
             }
+            else
+            {
+                DPRINTF("idx 0xFFFF for stage %s\n", stage->code.c_str());
+            }
 
             std::string name;
 

@@ -5,7 +5,7 @@
 #include "X2mFile.h"
 #include "EmbFile.h"
 
-#define BEHAVIOUR_MAX	27
+#define BEHAVIOUR_MAX	29
 
 ListDialog::ListDialog(ListMode mode, QWidget *parent, void *extra, int flags) :
     QDialog(parent),  ui(new Ui::ListDialog),  mode(mode), extra(extra), flags(flags)

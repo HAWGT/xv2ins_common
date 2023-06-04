@@ -30,6 +30,14 @@ static bool IsOldStylePsc()
         PSCHeader *hdr = (PSCHeader *)buf;
         if (hdr->header_size < sizeof(PSCHeader))
             ret = true;
+
+        // 1.20, the format updated again.
+        if (!ret)
+        {
+            size_t spec_size = size - sizeof(PSCHeader) - (2*hdr->num_entries*sizeof(PSCEntry));
+            if ((spec_size % sizeof(PSCSpecEntry)) != 0)
+                ret = true;
+        }
     }
 
     delete[] buf;
