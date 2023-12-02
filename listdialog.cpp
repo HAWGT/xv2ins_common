@@ -4,8 +4,7 @@
 #include "Xenoverse2.h"
 #include "X2mFile.h"
 #include "EmbFile.h"
-
-#define BEHAVIOUR_MAX	29
+#include "BpeFile.h"
 
 ListDialog::ListDialog(ListMode mode, QWidget *parent, void *extra, int flags) :
     QDialog(parent),  ui(new Ui::ListDialog),  mode(mode), extra(extra), flags(flags)
@@ -1058,7 +1057,7 @@ void ListDialog::PopulateList()
 
         for (size_t i = 0; i < game_stage_def->GetNumSsStages(); i++)
         {
-            Xv2Stage *stage = game_stage_def->GetStageBySsid((uint8_t)i);
+            Xv2Stage *stage = game_stage_def->GetStageBySsid((int32_t)i);
             std::string name = stage->code;
             std::string st_name;
 
@@ -1316,6 +1315,86 @@ void ListDialog::PopulateList()
         {
             std::string name = Xenoverse2::GetCharaAndCostumeName(entry.cms_id, entry.costume_index, entry.model_preset, false);
             ui->listWidget->addItem(Utils::StdStringToQString(name, false));
+        }
+    }
+    else if (mode == ListMode::BCS_ADDITIONAL_COLORS)
+    {
+        BcsFile *bcs = nullptr;
+
+        if (extra)
+        {
+            bcs = (BcsFile *)extra;
+        }
+        else
+        {
+            switch (flags)
+            {
+                case 0:
+                    bcs = game_hum_bcs;
+                break;
+
+                case 1:
+                    bcs = game_huf_bcs;
+                break;
+
+                case 2:
+                    bcs = game_nmc_bcs;
+                break;
+
+                case 3:
+                    bcs = game_fri_bcs;
+                break;
+
+                case 4:
+                    bcs = game_mam_bcs;
+                break;
+
+                case 5:
+                    bcs = game_maf_bcs;
+                break;
+            }
+        }
+
+        if (bcs)
+        {
+            ui->listWidget->setSortingEnabled(false);
+
+            for (const BcsPartColors &pcs : bcs->GetPartsColors())
+            {
+                if (pcs.valid)
+                {
+                    if (pcs.name != "HAIR_" && pcs.name != "eye_")
+                        ui->listWidget->addItem(Utils::StdStringToQString(pcs.name, false));
+                }
+            }
+        }
+    }
+    else if (mode == ListMode::BPE)
+    {
+        ui->listWidget->setSortingEnabled(false);
+
+        BpeFile *bpe = (BpeFile *)extra;
+        if (!bpe)
+            return;
+
+        for (size_t i = 0; i < bpe->GetNumEntries(); i++)
+        {
+            if (bpe->IsValidEntry(i))
+            {
+                QString text = QString("%1").arg(i);
+
+                if (flags & BPE_FLAG_OUTLINE)
+                {
+                    if (!bpe->HasType(i, BPE_ST_BODY_OUTLINE))
+                        continue;
+                }
+                else
+                {
+                    text = text + " (" + Utils::StdStringToQString(bpe->GetTypeString(i), false) + ")";
+                }
+
+                ui->listWidget->addItem(text);
+            }
         }
     }
 }

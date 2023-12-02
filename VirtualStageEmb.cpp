@@ -113,7 +113,7 @@ bool VirtualStageEmb::Build()
 
     for (const Xv2Stage &stage : *game_stage_def)
     {
-        if (stage.ssid == 0xFF)
+        if (stage.ssid < 0)
             continue;
 
         if (stage.ssid < XV2_ORIGINAL_NUM_SS_STAGES)

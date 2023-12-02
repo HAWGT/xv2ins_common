@@ -15,88 +15,19 @@
 
 #define GAME_CST_FILE   "data/system/chara_select_table.cst"
 
-static bool IsOldStylePsc()
+static bool IsOldStyleCus()
 {
-    size_t size;
+    CusFile cus;
 
-    uint8_t *buf = xv2fs->ReadFile("data/system/parameter_spec_char.psc", &size);
-    if (!buf)
+    if (!xv2fs->LoadFile(&cus, "data/system/custom_skill.cus"))
         return false;
 
-    bool ret = false;
-
-    if (size >= sizeof(PSCHeader))
-    {
-        PSCHeader *hdr = (PSCHeader *)buf;
-        if (hdr->header_size < sizeof(PSCHeader))
-            ret = true;
-
-        // 1.20, the format updated again.
-        if (!ret)
-        {
-            size_t spec_size = size - sizeof(PSCHeader) - (2*hdr->num_entries*sizeof(PSCEntry));
-            if ((spec_size % sizeof(PSCSpecEntry)) != 0)
-                ret = true;
-        }
-    }
-
-    delete[] buf;
-    return ret;
-}
-
-static bool IsOldStyleSev()
-{
-    size_t size;
-
-    uint8_t *buf = xv2fs->ReadFile("data/system/special_event_voice.sev", &size);
-    if (!buf)
-        return false;
-
-    bool ret = false;
-
-    if (size >= sizeof(SEVHeader))
-    {
-        const SEVHeader *hdr = (const SEVHeader *)buf;
-
-        if (hdr->signature != SEV_SIGNATURE)
-            return false;
-
-        const SEVEntry *file_entries = (const SEVEntry *)(buf+hdr->header_size);
-
-        for (uint32_t i = 0; i < hdr->num_entries; i++)
-        {
-            if (file_entries[i].unk_08 != 0 && file_entries[i].unk_08 != 1)
-            {
-                // Probably a pre 1.15 file
-                return true;
-            }
-        }
-    }
-
-    delete[] buf;
-    return ret;
-}
-
-static bool IsOldStyleIdb()
-{
-    size_t size = xv2fs->GetFileSize("data/system/item/skill_item.idb");
-    if (size == (size_t)-1)
-        return false;
-
-    if (size >= sizeof(IDBHeader))
-    {
-        size -= 0x10;
-
-        if ((size % sizeof(IDBEntryNew)) == 0)
-            return false;
-    }
-
-    return true;
+    return (cus.GetVersion() < 121);
 }
 
 static bool NeedsUpdate()
 {
-    return IsOldStylePsc() || IsOldStyleSev() || IsOldStyleIdb();
+    return IsOldStyleCus();
 }
 
 static uint8_t *ReadResourceFile(const char *path, size_t *size)
@@ -311,7 +242,7 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
         return false;
     }
 
-    if (needs_update && !game_cus->IsNewFormat())
+    if (needs_update && game_cus->GetVersion() < 121)
     {
         *needs_update = true;
         return false;

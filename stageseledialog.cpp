@@ -119,7 +119,7 @@ void StageSeleDialog::LoadPage(int page)
 
     std::vector<Xv2StageSlot> page_slots(first, end);
 
-    int i;
+    int i;    
 
     for (i = 0; i < (int)page_slots.size(); i++)
     {

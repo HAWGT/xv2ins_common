@@ -43,7 +43,9 @@ enum class ListMode
     TTB,
     TTC,
     TTC_FILES,
-    CNC
+    CNC,
+    BCS_ADDITIONAL_COLORS,
+    BPE
 };
 
 #define SKILL_FLAG_SUPER        1
@@ -55,6 +57,8 @@ enum class ListMode
 #define SKILL_FLAG_ALL          (SKILL_FLAG_SUPER|SKILL_FLAG_ULTIMATE|SKILL_FLAG_EVASIVE|SKILL_FLAG_BLAST|SKILL_FLAG_AWAKEN)
 
 #define FLAG_USE_CUS_AURA   1
+
+#define BPE_FLAG_OUTLINE    1
 
 class ListDialog : public QDialog
 {

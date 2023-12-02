@@ -7,15 +7,15 @@
 #define PROGRAM_NAME_COSTCREAT  "XV2 Costume Creator"
 #define PROGRAM_NAME_STAGECREAT "XV2 Stage Creator"
 #define PROGRAM_NAME_QUESTCREAT "XV2 Quest Creator"
-#define PROGRAM_VERSION "4.1"
+#define PROGRAM_VERSION "4.2"
 
 #define INSTALLED_MODS_PATH "XV2INS/Installed"
 
-#define MINIMUM_EXE_VERSION_REQUIRED  1.201f
-#define MINIMUM_PATCHER_REQUIRED    4.0f
+#define MINIMUM_EXE_VERSION_REQUIRED  1.21f
+#define MINIMUM_PATCHER_REQUIRED    4.2f
 
 #define XV2_PATCHER_AS3_TAG_PAUSE   "XV2_PATCHER_AS3_V06"
-#define XV2_PATCHER_AS3_TAG_CHARA   "XV2_PATCHER_AS3_V11"
+#define XV2_PATCHER_AS3_TAG_CHARA   "XV2_PATCHER_AS3_V13"
 #define XV2_PATCHER_AS3_TAG_STAGE   "XV2_PATCHER_AS3_V11"
 
 bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update=nullptr);
