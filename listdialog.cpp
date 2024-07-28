@@ -960,6 +960,7 @@ void ListDialog::PopulateList()
     else if (mode == ListMode::TALISMAN)
     {
         IdbFile *idb = (extra) ? (IdbFile *)extra : game_talisman_idb;
+        int n = 0;
         ui->listWidget->setSortingEnabled(false);
 
         for (const IdbEntry &entry : *idb)
@@ -970,6 +971,8 @@ void ListDialog::PopulateList()
                 name = Utils::ToString(entry.id);
 
             ui->listWidget->addItem(Utils::StdStringToQString(name, false));
+            ui->listWidget->item(n)->setData(Qt::UserRole, QVariant(entry.id));
+            n++;
         }
     }
     else if (mode == ListMode::BCS)

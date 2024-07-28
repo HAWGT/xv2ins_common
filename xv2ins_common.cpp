@@ -6,11 +6,15 @@
 #include "xv2ins_common.h"
 #include "CharaSeleIggyBlob.h"
 #include "stageseleiggyblob.h"
+#include "popuppauseiggyblob.h"
+#include "itemlistdetailsblob.h"
 
 //#define MY_CHARALIST_OLD        "XV2INS\\CharaListV6.as"
 //#define MY_CHARALIST_NEW        "data/XV2P_SLOTS.x2s"
 #define CHARASELE_IGGY_PATH     "data/ui/iggy/CHARASELE.iggy"
 #define STAGESELE_IGGY_PATH     "data/ui/iggy/STAGESELE.iggy"
+#define POPUPPAUSE_IGGY_PATH     "data/ui/iggy/POPUP_PAUSE.iggy"
+#define ILD_IGGY_PATH            "data/ui/iggy/ITEMLIST_DETAILS.iggy"
 //#define CHASEL_PATH "Internal/CharaSele"
 
 #define GAME_CST_FILE   "data/system/chara_select_table.cst"
@@ -58,6 +62,43 @@ static uint8_t *ReadResourceFile(const char *path, size_t *size)
      return buf;
 }
 
+static void InstallIggy(const char *path, const uint8_t *blob, size_t blob_size, const char *tag)
+{
+    bool install_iggy = true;
+
+    if (xv2fs->FileExists(path, false))
+    {
+        size_t size;
+        uint8_t *buf = xv2fs->ReadFile(path, &size);
+
+        if (!buf)
+        {
+            DPRINTF("%s: Failed to load %s\n", FUNCNAME, path);
+            exit(-1);
+        }
+
+        for (size_t i = 0; i < size-strlen(tag)-1; i++)
+        {
+            if (memcmp(buf+i, tag, strlen(tag)) == 0)
+            {
+                install_iggy = false;
+                break;
+            }
+        }
+
+        delete[] buf;
+    }
+
+    if (install_iggy)
+    {
+        if (!xv2fs->WriteFile(path, blob, blob_size))
+        {
+            DPRINTF("%s: Failed to save %s\n", FUNCNAME, path);
+            exit(-1);
+        }
+    }
+}
+
 bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
 {
     if (needs_update)
@@ -88,73 +129,10 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
             return false;
     }
 
-    bool install_iggy = true;
-
-    if (xv2fs->FileExists(CHARASELE_IGGY_PATH, false))
-    {
-        size_t size;
-        uint8_t *buf = xv2fs->ReadFile(CHARASELE_IGGY_PATH, &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to load CHARASELE.iggy.\n", FUNCNAME);
-            exit(-1);
-        }
-
-        for (size_t i = 0; i < size-strlen(XV2_PATCHER_AS3_TAG_CHARA)-1; i++)
-        {
-            if (memcmp(buf+i, XV2_PATCHER_AS3_TAG_CHARA, strlen(XV2_PATCHER_AS3_TAG_CHARA)) == 0)
-            {
-                install_iggy = false;
-                break;
-            }
-        }
-
-        delete[] buf;
-    }
-
-    if (install_iggy)
-    {
-        if (!xv2fs->WriteFile(CHARASELE_IGGY_PATH, charasele_iggy_blob, sizeof(charasele_iggy_blob)))
-        {
-            DPRINTF("%s: Failed to save CHARASELE.iggy.\n", FUNCNAME);
-            exit(-1);
-        }
-    }    
-
-    install_iggy = true;
-
-    if (xv2fs->FileExists(STAGESELE_IGGY_PATH, false))
-    {
-        size_t size;
-        uint8_t *buf = xv2fs->ReadFile(STAGESELE_IGGY_PATH, &size);
-
-        if (!buf)
-        {
-            DPRINTF("%s: Failed to load STAGESELE.iggy.\n", FUNCNAME);
-            exit(-1);
-        }
-
-        for (size_t i = 0; i < size-strlen(XV2_PATCHER_AS3_TAG_STAGE)-1; i++)
-        {
-            if (memcmp(buf+i, XV2_PATCHER_AS3_TAG_STAGE, strlen(XV2_PATCHER_AS3_TAG_STAGE)) == 0)
-            {
-                install_iggy = false;
-                break;
-            }
-        }
-
-        delete[] buf;
-    }
-
-    if (install_iggy)
-    {
-        if (!xv2fs->WriteFile(STAGESELE_IGGY_PATH, stagesele_iggy_blob, sizeof(stagesele_iggy_blob)))
-        {
-            DPRINTF("%s: Failed to save STAGESELE.iggy.\n", FUNCNAME);
-            exit(-1);
-        }
-    }
+    InstallIggy(CHARASELE_IGGY_PATH, charasele_iggy_blob, sizeof(charasele_iggy_blob), XV2_PATCHER_AS3_TAG_CHARA);
+    InstallIggy(STAGESELE_IGGY_PATH, stagesele_iggy_blob, sizeof(stagesele_iggy_blob), XV2_PATCHER_AS3_TAG_STAGE);
+    InstallIggy(POPUPPAUSE_IGGY_PATH, popuppause_iggy_blob, sizeof(popuppause_iggy_blob), XV2_PATCHER_AS3_TAG_PAUSE);
+    InstallIggy(ILD_IGGY_PATH, itemlist_details_iggy_blob, sizeof(itemlist_details_iggy_blob), XV2_PATCHER_AS3_TAG_ILD);
 
     //if (!Xenoverse2::InitCharaList(CHASEL_PATH, my_charalist))
     if (!Xenoverse2::InitCharaList())

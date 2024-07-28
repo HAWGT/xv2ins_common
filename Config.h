@@ -59,6 +59,9 @@ struct Config
     QString ld_quest_import;
     QString ld_quest_attachments;
 
+    QString lf_depends_bskill;
+    QString lf_depends_ss;
+
     int position;
 
     bool listen_css_language_english;

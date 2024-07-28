@@ -70,6 +70,9 @@ void Config::Load()
     std::string ld_quest_import_std;
     std::string ld_quest_attachments_std;
 
+    std::string lf_depends_bskill_std;
+    std::string lf_depends_ss_std;
+
     // Ignore errors
     ini.LoadFromFile(GetIniPath(), false);
 
@@ -130,6 +133,9 @@ void Config::Load()
     ini.GetStringValue("Editor", "ld_quest_import", ld_quest_import_std);
     ini.GetStringValue("Editor", "ld_quest_attachments", ld_quest_attachments_std);
 
+    ini.GetStringValue("Editor", "lf_depends_bskill", lf_depends_bskill_std);
+    ini.GetStringValue("Editor", "lf_depends_ss", lf_depends_ss_std);
+
     game_directory = Utils::StdStringToQString(game_directory_std);
     flex_path = Utils::StdStringToQString(flex_path_std);
 
@@ -179,6 +185,9 @@ void Config::Load()
     ld_quest_export = Utils::StdStringToQString(ld_quest_export_std);
     ld_quest_import = Utils::StdStringToQString(ld_quest_import_std);
     ld_quest_attachments = Utils::StdStringToQString(ld_quest_attachments_std);
+
+    lf_depends_bskill = Utils::StdStringToQString(lf_depends_bskill_std);
+    lf_depends_ss = Utils::StdStringToQString(lf_depends_ss_std);
 }
 
 void Config::Save()
@@ -236,6 +245,9 @@ void Config::Save()
     std::string ld_quest_import_std;
     std::string ld_quest_attachments_std;
 
+    std::string lf_depends_bskill_std;
+    std::string lf_depends_ss_std;
+
     game_directory_std = Utils::QStringToStdString(game_directory);
     flex_path_std = Utils::QStringToStdString(flex_path);
 
@@ -285,6 +297,9 @@ void Config::Save()
     ld_quest_export_std = Utils::QStringToStdString(ld_quest_export);
     ld_quest_import_std = Utils::QStringToStdString(ld_quest_import);
     ld_quest_attachments_std = Utils::QStringToStdString(ld_quest_attachments);
+
+    lf_depends_bskill_std = Utils::QStringToStdString(lf_depends_bskill);
+    lf_depends_ss_std = Utils::QStringToStdString(lf_depends_ss);
 
     ini.LoadFromFile(ini_path, false);
 
@@ -344,6 +359,9 @@ void Config::Save()
     ini.SetStringValue("Editor", "ld_quest_export", ld_quest_export_std);
     ini.SetStringValue("Editor", "ld_quest_import", ld_quest_import_std);
     ini.SetStringValue("Editor", "ld_quest_attachments", ld_quest_attachments_std);
+
+    ini.SetStringValue("Editor", "lf_depends_bskill", lf_depends_bskill_std);
+    ini.SetStringValue("Editor", "lf_depends_ss", lf_depends_ss_std);
 
     ini.SaveToFile(ini_path, true, true);
 }

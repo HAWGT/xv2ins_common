@@ -76,6 +76,7 @@ IdbEffectDialog::IdbEffectDialog(QWidget *parent, const IdbEffect &effect) :
 
     ui->nu48Edit->setValidator(new QIntValidator(this));
     ui->nu4CEdit->setValidator(new QIntValidator(this));
+    ui->nu0CEdit->setValidator(new QIntValidator(this));
 
     EffectToGui();
 }
@@ -171,6 +172,7 @@ void IdbEffectDialog::EffectToGui()
 
     ui->nu48Edit->setText(QString("%1").arg((int32_t)effect.new_unk_48[0]));
     ui->nu4CEdit->setText(QString("%1").arg((int32_t)effect.new_unk_48[1]));
+    ui->nu0CEdit->setText(QString("%1").arg((int32_t)effect.new_unk_0C));
 }
 
 void IdbEffectDialog::GuiToEffect()
@@ -243,6 +245,7 @@ void IdbEffectDialog::GuiToEffect()
 
     effect.new_unk_48[0] = (uint32_t) ui->nu48Edit->text().toInt();
     effect.new_unk_48[1] = (uint32_t) ui->nu4CEdit->text().toInt();
+    effect.new_unk_0C = (uint32_t) ui->nu0CEdit->text().toInt();
 }
 
 void IdbEffectDialog::on_buttonBox_rejected()

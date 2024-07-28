@@ -305,6 +305,24 @@
      <string>Dlc_16</string>
     </property>
    </item>
+   <item>
+    <property name="text">
+     <string>Dlc_17</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QCheckBox" name="cgk2Check">
+   <property name="geometry">
+    <rect>
+     <x>120</x>
+     <y>190</y>
+     <width>91</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Flag CGK2</string>
+   </property>
   </widget>
  </widget>
  <resources/>

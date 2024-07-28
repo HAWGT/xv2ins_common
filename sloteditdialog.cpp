@@ -62,6 +62,7 @@ bool SlotEditDialog::GuiToEntry()
     entry->unlock_index = ui->unlockEdit->text().toInt();
 
     entry->flag_gk2 = ui->gk2Check->isChecked();
+    entry->flag_cgk2 = ui->cgk2Check->isChecked();
 
     if (ui->voicesEdit->text().isEmpty())
     {
@@ -186,6 +187,7 @@ void SlotEditDialog::EntryToGui()
     ui->presetEdit->setText(QString("%1").arg(entry->model_preset));
     ui->unlockEdit->setText(QString("%1").arg(entry->unlock_index));
     ui->gk2Check->setChecked(entry->flag_gk2);
+    ui->cgk2Check->setChecked(entry->flag_cgk2);
     ui->voicesEdit->setText(QString("%1,%2").arg(entry->voices_id_list[0]).arg(entry->voices_id_list[1]));
 
     bool found = false;
