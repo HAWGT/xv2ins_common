@@ -65,6 +65,8 @@ void Config::Load()
     std::string lf_external_ttb_std;
     std::string lf_external_ttc_std;
     std::string lf_external_cnc_std;
+    std::string lf_external_ikd_std;
+    std::string lf_external_vlc_std;
 
     std::string ld_quest_export_std;
     std::string ld_quest_import_std;
@@ -122,6 +124,8 @@ void Config::Load()
     ini.GetStringValue("Editor", "lf_external_ttb", lf_external_ttb_std);
     ini.GetStringValue("Editor", "lf_external_ttc", lf_external_ttc_std);
     ini.GetStringValue("Editor", "lf_external_cnc", lf_external_cnc_std);
+    ini.GetStringValue("Editor", "lf_external_ikd", lf_external_ikd_std);
+    ini.GetStringValue("Editor", "lf_external_vlc", lf_external_vlc_std);
 
     ini.GetIntegerValue("Editor", "position", &position, 0);
     ini.GetBooleanValue("Editor", "listen_css_language_english", &listen_css_language_english);
@@ -181,6 +185,8 @@ void Config::Load()
     lf_external_ttb = Utils::StdStringToQString(lf_external_ttb_std);
     lf_external_ttc = Utils::StdStringToQString(lf_external_ttc_std);
     lf_external_cnc = Utils::StdStringToQString(lf_external_cnc_std);
+    lf_external_ikd = Utils::StdStringToQString(lf_external_ikd_std);
+    lf_external_vlc = Utils::StdStringToQString(lf_external_vlc_std);
 
     ld_quest_export = Utils::StdStringToQString(ld_quest_export_std);
     ld_quest_import = Utils::StdStringToQString(ld_quest_import_std);
@@ -240,6 +246,8 @@ void Config::Save()
     std::string lf_external_ttb_std;
     std::string lf_external_ttc_std;
     std::string lf_external_cnc_std;
+    std::string lf_external_ikd_std;
+    std::string lf_external_vlc_std;
 
     std::string ld_quest_export_std;
     std::string ld_quest_import_std;
@@ -293,6 +301,8 @@ void Config::Save()
     lf_external_ttb_std = Utils::QStringToStdString(lf_external_ttb);
     lf_external_ttc_std = Utils::QStringToStdString(lf_external_ttc);
     lf_external_cnc_std = Utils::QStringToStdString(lf_external_cnc);
+    lf_external_ikd_std = Utils::QStringToStdString(lf_external_ikd);
+    lf_external_vlc_std = Utils::QStringToStdString(lf_external_vlc);
 
     ld_quest_export_std = Utils::QStringToStdString(ld_quest_export);
     ld_quest_import_std = Utils::QStringToStdString(ld_quest_import);
@@ -349,6 +359,8 @@ void Config::Save()
     ini.SetStringValue("Editor", "lf_external_ttb", lf_external_ttb_std);
     ini.SetStringValue("Editor", "lf_external_ttc", lf_external_ttc_std);
     ini.SetStringValue("Editor", "lf_external_cnc", lf_external_cnc_std);
+    ini.SetStringValue("Editor", "lf_external_ikd", lf_external_ikd_std);
+    ini.SetStringValue("Editor", "lf_external_vlc", lf_external_vlc_std);
 
     ini.SetIntegerValue("Editor", "position", position);
     ini.SetBooleanValue("Editor", "listen_css_language_english", listen_css_language_english);

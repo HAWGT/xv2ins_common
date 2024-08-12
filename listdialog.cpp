@@ -1400,6 +1400,85 @@ void ListDialog::PopulateList()
             }
         }
     }
+    else if (mode == ListMode::IKD)
+    {
+        IkdFile *ikd;
+
+        if (extra)
+        {
+            ikd = (IkdFile *)extra;
+        }
+        else
+        {
+            if (flags & IKD_FLAG_LOBBY)
+                ikd = game_ikd_lobby;
+            else
+                ikd = game_ikd_battle;
+        }
+
+        ui->listWidget->setSortingEnabled(false);
+
+        for (const IkdEntry &entry : *ikd)
+        {
+            if (entry.cms_id == 0xFFFF)
+            {
+                ui->listWidget->addItem("NONE");
+
+            }
+            else
+            {
+                std::string code, chara_name, costume_name;
+
+                chara_name = Utils::ToString(entry.cms_id);
+                costume_name = Utils::ToString(entry.costume_id);
+
+                if (Xenoverse2::GetCharaCodeFromId(entry.cms_id, code))
+                {
+                    if (Xenoverse2::GetCharaName(code, chara_name, XV2_LANG_ENGLISH, entry.costume_id))
+                    {
+                        Xenoverse2::GetCharaCostumeName(code, entry.costume_id, 0, costume_name);
+                    }
+                    else
+                    {
+                        chara_name = code;
+                    }
+                }
+
+                ui->listWidget->addItem(Utils::StdStringToQString(chara_name + " - " + costume_name, false));
+            }
+        }
+    }
+    else if (mode == ListMode::VLC)
+    {
+        VlcFile *vlc = (extra) ? (VlcFile *)extra : game_vlc;
+
+        ui->listWidget->setSortingEnabled(false);
+
+        for (const VlcEntry &entry : *vlc)
+        {
+            if (entry.cms_id == 0xFFFFFFFF)
+            {
+                ui->listWidget->addItem("NONE");
+
+            }
+            else
+            {
+                std::string code, chara_name;
+
+                chara_name = Utils::ToString(entry.cms_id);
+
+                if (Xenoverse2::GetCharaCodeFromId(entry.cms_id, code))
+                {
+                    if (!Xenoverse2::GetCharaName(code, chara_name))
+                    {
+                        chara_name = code;
+                    }
+                }
+
+                ui->listWidget->addItem(Utils::StdStringToQString(chara_name, false));
+            }
+        }
+    }
 }
 
 void ListDialog::on_listWidget_itemActivated(QListWidgetItem *item)

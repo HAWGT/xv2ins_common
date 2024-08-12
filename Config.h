@@ -54,6 +54,8 @@ struct Config
     QString lf_external_ttb;
     QString lf_external_ttc;
     QString lf_external_cnc;
+    QString lf_external_ikd;
+    QString lf_external_vlc;
 
     QString ld_quest_export;
     QString ld_quest_import;

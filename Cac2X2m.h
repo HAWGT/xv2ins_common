@@ -83,6 +83,7 @@ namespace Cac2X2m
     bool SetCms(X2mFile *x2m, uint32_t cms_entry, std::unordered_set<std::string> &files, std::string &base_dir, BcsFile &bcs, EskFile &esk, EanFile &cam_ean);
 
     void ResolveCustomSkills(X2mFile *x2m, CusSkillSet &set);
+    void ResolveCustomSuperSoul(X2mFile *x2m, PscSpecEntry &spec);
 
     bool SetCso(uint32_t race, CsoEntry &new_cso, std::unordered_set<std::string> &files, uint32_t voice);
     bool SetCso(const std::string &race, CsoEntry &new_cso, std::unordered_set<std::string> &files, uint32_t voice);
@@ -95,6 +96,12 @@ namespace Cac2X2m
 
     bool SetCml(uint32_t race, CmlEntry &new_cml, uint32_t body_shape);
     bool SetCml(const std::string &race, CmlEntry &new_cml, uint32_t body_shape);
+
+    bool SetIkd(uint32_t race, IkdEntry &new_ikd, uint32_t body_shape);
+    bool SetIkd(const std::string &race, IkdEntry &new_ikd, uint32_t body_shape);
+
+    bool SetVlc(uint32_t race, VlcEntry &entry);
+    bool SetVlc(const std::string &race, VlcEntry &entry);
 
     bool WriteFiles(X2mFile *x2m, const std::unordered_set<std::string> &files);
     bool WriteCustomFiles(X2mFile *x2m, BcsFile &bcs, EskFile &esk, EanFile &cam_ean);

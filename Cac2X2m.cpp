@@ -1358,6 +1358,40 @@ void Cac2X2m::ResolveCustomSkills(X2mFile *x2m, CusSkillSet &set)
     }
 }
 
+static X2mSuperSoul *GetCustomSuperSoul(uint16_t id)
+{
+    if (id == 0xFFFF)
+        return nullptr;
+
+    return game_costume_file->FindSuperSoulByIdb(id);
+}
+
+
+void Cac2X2m::ResolveCustomSuperSoul(X2mFile *x2m, PscSpecEntry &spec)
+{
+    X2mSuperSoul *ss = GetCustomSuperSoul((uint16_t)spec.talisman);
+    if (!ss)
+        return;
+
+    X2mDepends *dep = x2m->FindCharaSsDepends(ss->guid);
+    if (dep)
+    {
+        spec.talisman = dep->id;
+    }
+    else
+    {
+        std::string name = Xenoverse2::GetTalismanNameEx((uint16_t)spec.talisman);
+        if (name.length() == 0)
+            name = "Mod SuperSoul";
+
+        dep = x2m->AddCharaSsDepends(ss->guid, name);
+        if (dep)
+        {
+            spec.talisman = dep->id;
+        }
+    }
+}
+
 bool Cac2X2m::SetCso(uint32_t race, CsoEntry &new_cso, std::unordered_set<std::string> &files, uint32_t voice)
 {
     std::vector<CsoEntry *> cso_entries;
@@ -1481,6 +1515,50 @@ bool Cac2X2m::SetCml(const std::string &race, CmlEntry &new_cml, uint32_t body_s
         return false;
 
     return SetCml(cms->id, new_cml, body_shape);
+}
+
+bool Cac2X2m::SetIkd(uint32_t race, IkdEntry &new_ikd, uint32_t body_shape)
+{
+    IkdEntry *orig_ikd = game_ikd_battle->FindEntry(race, body_shape);
+    if (!orig_ikd)
+    {
+        DPRINTF("%s: Cannot find ikd entry for race 0x%x body_shape %d.\n", FUNCNAME, race, body_shape);
+        return false;
+    }
+
+    new_ikd = *orig_ikd; // Copy
+    return true;
+}
+
+bool Cac2X2m::SetIkd(const std::string &race, IkdEntry &new_ikd, uint32_t body_shape)
+{
+    CmsEntry *cms = game_cms->FindEntryByName(race);
+    if (!cms)
+        return false;
+
+    return SetIkd(cms->id, new_ikd, body_shape);
+}
+
+bool Cac2X2m::SetVlc(uint32_t race, VlcEntry &entry)
+{
+    VlcEntry *orig_vlc = game_vlc->FindEntry(race);
+    if (!orig_vlc)
+    {
+        DPRINTF("%s: Cannot find vlc entry for race 0x%x\n", FUNCNAME, race);
+        return false;
+    }
+
+    entry = *orig_vlc; // Copy
+    return true;
+}
+
+bool Cac2X2m::SetVlc(const std::string &race, VlcEntry &entry)
+{
+    CmsEntry *cms = game_cms->FindEntryByName(race);
+    if (!cms)
+        return false;
+
+    return SetVlc(cms->id, entry);
 }
 
 bool Cac2X2m::WriteFiles(X2mFile *x2m, const std::unordered_set<std::string> &files)
@@ -3032,7 +3110,29 @@ uint32_t X2m2Cac::GetTalisman(X2mFile *x2m, uint32_t slot_idx)
     if (psc_idx >= x2m->GetNumSlotEntries())
         return (uint32_t)-1;
 
-    return x2m->GetPscEntry(psc_idx).talisman;
+    uint32_t talisman = x2m->GetPscEntry(psc_idx).talisman;
+    if (talisman >= X2M_SS_DEPENDS_BEGIN)
+    {
+        X2mDepends *dep = x2m->FindCharaSsDepends((uint16_t)talisman);
+        if (dep)
+        {
+            X2mSuperSoul *ss = game_costume_file->FindSuperSoul(dep->guid);
+            if (ss)
+            {
+                talisman = (uint32_t)ss->idb_id;
+            }
+            else
+            {
+                talisman = 0xFFFFFFFF;
+            }
+        }
+        else
+        {
+            talisman = 0xFFFFFFFF;
+        }
+    }
+
+    return talisman;
 }
 
 struct CustomSkillParam
@@ -3239,6 +3339,3 @@ uint32_t X2m2Cac::GetRace(X2mFile *x2m)
 
     return (uint32_t)-1;
 }
-
-
-
