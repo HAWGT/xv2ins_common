@@ -1,9 +1,15 @@
 #include <QDir>
 #include <QFile>
+#include <QMessageBox>
+#include <QComboBox>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QLabel>
 
 #include "Config.h"
 #include "IniFile.h"
 #include "requerimentsdialog.h"
+#include "Xenoverse2.h"
 
 #include "debug.h"
 
@@ -80,6 +86,8 @@ void Config::Load()
 
     ini.GetStringValue("General", "game_directory", game_directory_std);
     ini.GetStringValue("General", "flex_path", flex_path_std);
+    ini.GetIntegerValue("General", "global_lang", &global_lang, -1);
+    ini.GetBooleanValue("General", "dark_theme", &dark_theme);
 
     ini.GetFloatValue("Installer", "patcher_version_new", &patcher_version_new);
     ini.GetStringValue("Installer", "lf_installer_open", lf_installer_open_std);
@@ -132,6 +140,7 @@ void Config::Load()
     ini.GetBooleanValue("Editor", "listen_sev_language_english", &listen_sev_language_english);
 
     ini.GetBooleanValue("Installer", "idb_fix_applied", &idb_fix_applied, false);
+    ini.GetBooleanValue("Installer", "language_asked", &language_asked, false);
 
     ini.GetStringValue("Editor", "ld_quest_export", ld_quest_export_std);
     ini.GetStringValue("Editor", "ld_quest_import", ld_quest_import_std);
@@ -315,6 +324,8 @@ void Config::Save()
 
     ini.SetStringValue("General", "game_directory", game_directory_std);
     ini.SetStringValue("General", "flex_path", flex_path_std);
+    ini.SetIntegerValue("General", "global_lang", global_lang);
+    ini.SetBooleanValue("General", "dark_theme", dark_theme);
 
     ini.SetFloatValue("Installer", "patcher_version_new", patcher_version_new);
     ini.SetStringValue("Installer", "lf_installer_open", lf_installer_open_std);    
@@ -367,6 +378,7 @@ void Config::Save()
     ini.SetBooleanValue("Editor", "listen_sev_language_english", listen_sev_language_english);
 
     ini.SetBooleanValue("Installer", "idb_fix_applied", idb_fix_applied);
+    ini.SetBooleanValue("Installer", "language_asked", language_asked);
 
     ini.SetStringValue("Editor", "ld_quest_export", ld_quest_export_std);
     ini.SetStringValue("Editor", "ld_quest_import", ld_quest_import_std);
@@ -501,6 +513,69 @@ bool Config::ConfigureRequirements()
 
     // ehem, let's recurse until user selects proper directory, clicks cancel, or error
     return ConfigureRequirements();
+}
+
+void Config::LanguageSetup(bool installer_mode)
+{
+    if (!language_asked && installer_mode)
+    {
+        QMessageBox box;
+        box.setWindowTitle("Language optimization");
+        box.setText("XV2 Installer can speed up mods install times by using only one language.<br>"
+                    "As a drawback, modders will lose ability to copy entries in multiple languages when using the mods creators.<br>"
+                    "Also, with this feature, data folder cannot be shared between users of different languages.<br><br>"
+                    "<b><font color='red'>If you press OK, make sure to select the same language you are using in the game or crashes will happen in game.</b></font><br>"
+                    "Otherwise, press Cancel to opt out of this feature.<br><br>"
+                    "(Note: This setting only apply to text language, audio is unaffected).");
+
+        QComboBox *langBox = new QComboBox();   
+        langBox->addItems({"English", "Spanish (Spain)", "Spanish (Latin)", "French", "German", "Italian", "Portuguese", "Polish", "Russian", "Chinese (tw)", "Chinese (zh)", "Korean", "Japanese" });
+
+        QWidget *customWidget = new QWidget();
+        QVBoxLayout *layout = new QVBoxLayout(customWidget);
+        QLabel *label = new QLabel("Language:");
+        layout->addWidget(label);
+        layout->addWidget(langBox);
+        customWidget->setLayout(layout);
+        QGridLayout *gridLayout = qobject_cast<QGridLayout *>(box.layout());
+        gridLayout->addWidget(customWidget, gridLayout->rowCount(), 0, 1, gridLayout->columnCount());
+
+        box.addButton(QMessageBox::Ok);
+        box.addButton(QMessageBox::Cancel);
+
+        if (box.exec() == QMessageBox::Ok)
+        {
+            global_lang = langBox->currentIndex();
+        }
+
+        language_asked = true;
+        Save();
+        return;
+    }
+
+    if (!xv2fs)
+        return;
+
+    // Regardless if the language was set up, let's overwrite it if we found the installation only has one language, which may or may not be the same saved
+    // (This is so for when people share data folders in different language, which is anyway not recommended)
+    const std::string test_path = "data/msg/proper_noun_character_name_";
+    int lang_found = -1;
+
+    for (size_t i = 0; i < XV2_LANG_NUM; i++)
+    {
+        if (xv2fs->FileExists(test_path + xv2_lang_codes[i], false, true))
+        {
+            if (lang_found >= 0)
+                return; // More than one language
+
+            lang_found = (int)i;
+        }
+    }
+
+    if (lang_found >= 0 && lang_found != global_lang)
+    {
+        global_lang = lang_found;
+    }
 }
 
 QString Config::GetDirectory(const QString &file)

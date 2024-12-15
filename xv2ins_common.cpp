@@ -112,7 +112,9 @@ bool Bootstrap(bool multiple_hci, bool installer_mode, bool *needs_update)
         exit(-1);
     }
 
-    Xenoverse2::InitFs(Utils::QStringToStdString(config.game_directory));    
+    Xenoverse2::InitFs(Utils::QStringToStdString(config.game_directory));
+
+    config.LanguageSetup(installer_mode);
 
     float version = Utils::GetExeVersion(Utils::MakePathString(Utils::QStringToStdString(config.game_directory), "bin/DBXV2.exe"));
     if (version < (MINIMUM_EXE_VERSION_REQUIRED-0.0001))

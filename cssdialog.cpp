@@ -37,6 +37,7 @@ enum CssAction
     CSS_REMOVE,
     CSS_MOVETO,
     CSS_CUT,
+    CSS_REMOVE_FULL
 };
 
 CssDialog::CssDialog(CssMode mode, QWidget *parent) :
@@ -238,6 +239,10 @@ void CssDialog::PopulateSlots(const std::vector<CharaListSlot> &c_slots, CssMode
 
                 QAction *add = menu->addMenu(submenu);
                 add->setProperty("action_type", CSS_ADD);
+            }
+
+            {
+                AddMenuAction2("Delete", CSS_REMOVE_FULL, menu, i);
             }
 
             tbutton->setMenu(menu);
@@ -1023,7 +1028,38 @@ void CssDialog::onCharacterEditAction(QAction *action)
             }
 
             UpdateClipboard();
-        }        
+        }
+        else if (type == CSS_REMOVE_FULL)
+        {
+            QString message = "Are you sure you wnat to delete this slot and all its subentries?";
+
+            if (QMessageBox::warning(this, "Delete?", message,
+                                      QMessageBox::StandardButtons(QMessageBox::Yes|QMessageBox::No), QMessageBox::No)
+                    != QMessageBox::Yes)
+            {
+                return;
+            }
+
+            if (selected_entry && slot_index == selected_entry_slot_index)
+            {
+                selected_entry = nullptr;
+            }
+
+            edit_slots.erase(edit_slots.begin()+slot_index);
+            PopulateSlots(edit_slots, CssMode::EDIT);
+
+            if (selected_entry)
+            {
+                if (selected_entry_slot_index > slot_index)
+                {
+                    selected_entry_slot_index--;
+                }
+
+                selected_entry = &edit_slots[selected_entry_slot_index].entries[selected_entry_entry_index];
+            }
+
+            UpdateClipboard();
+        }
     }
 }
 

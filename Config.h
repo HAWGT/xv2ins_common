@@ -70,11 +70,15 @@ struct Config
     bool listen_sev_language_english;
 
     bool idb_fix_applied;
+    bool language_asked;
+
+    bool dark_theme;
 
     void Load();
     void Save();
 
     bool ConfigureRequirements();
+    void LanguageSetup(bool installer_mode);
 
     static QString GetDirectory(const QString &file);
 
