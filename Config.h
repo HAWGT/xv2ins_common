@@ -63,6 +63,7 @@ struct Config
 
     QString lf_depends_bskill;
     QString lf_depends_ss;
+    QString lf_depends_chara;
 
     int position;
 
