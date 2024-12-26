@@ -525,6 +525,34 @@ void Config::LanguageSetup(bool installer_mode)
 {
     if (!language_asked && installer_mode)
     {
+        static std::unordered_map<std::string, int> steam_lang_map =
+        {
+            { "english", XV2_LANG_ENGLISH },
+            { "spanish", XV2_LANG_SPANISH1 },
+            { "latam", XV2_LANG_SPANISH2 },
+            { "french", XV2_LANG_FRENCH },
+            { "german", XV2_LANG_GERMAN },
+            { "italian", XV2_LANG_ITALIAN },
+            { "portuguese", XV2_LANG_PORTUGUESE }, // Hope this one is correct
+            { "brazilian", XV2_LANG_PORTUGUESE }, // Hope this one is correct
+            { "polish", XV2_LANG_POLISH },
+            { "russian", XV2_LANG_RUSSIAN },
+            { "tchinese", XV2_LANG_CHINESE1 },
+            { "schinese", XV2_LANG_CHINESE2 },
+            { "koreana", XV2_LANG_KOREAN },
+            { "japanese", XV2_LANG_JAPANESE },
+        };
+
+        int lang = XV2_LANG_ENGLISH;
+        std::string steam_lang;
+
+        if (Utils::GetRegistryValueString(HKEY_CURRENT_USER, "Software/Valve/Steam/steamglobal/Language", steam_lang))
+        {
+            auto it = steam_lang_map.find(steam_lang);
+            if (it != steam_lang_map.end())
+                lang = it->second;
+        }
+
         QMessageBox box;
         box.setWindowTitle("Language optimization");
         box.setText("XV2 Installer can speed up mods install times by using only one language.<br>"
@@ -535,7 +563,8 @@ void Config::LanguageSetup(bool installer_mode)
                     "(Note: This setting only apply to text language, audio is unaffected).");
 
         QComboBox *langBox = new QComboBox();   
-        langBox->addItems({"English", "Spanish (Spain)", "Spanish (Latin)", "French", "German", "Italian", "Portuguese", "Polish", "Russian", "Chinese (tw)", "Chinese (zh)", "Korean", "Japanese" });
+        langBox->addItems({"English", "Spanish (Spain)", "Spanish (Latam)", "French", "German", "Italian", "Portuguese", "Polish", "Russian", "Chinese (traditional)", "Chinese (simplified)", "Korean", "Japanese" });
+        langBox->setCurrentIndex(lang);
 
         QWidget *customWidget = new QWidget();
         QVBoxLayout *layout = new QVBoxLayout(customWidget);
